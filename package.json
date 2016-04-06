@@ -1,7 +1,7 @@
 {
   "name": "recipe-to-list",
   "version": "1.0.0",
-  "description": "Starting point for react/node, includes webpack, hot loader, and airbnb eslint.",
+  "description": "Convert recipes to shopping lists",
   "repository": {
     "type": "git",
     "url": "git://github.com/scwood/recipe-to-list.git"
