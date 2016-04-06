@@ -8,9 +8,9 @@
   },
   "scripts": {
     "build": "webpack -p && babel src/server -d dist",
-    "lint": "eslint src",
+    "lint": "eslint src --ext .js,.jsx",
     "start": "npm run start-client & npm run start-server",
-    "start-client": "webpack-dev-server --no-info --progress",
+    "start-client": "webpack-dev-server --progress",
     "start-server": "nodemon src/server/index.js --exec babel-node --ignore src/client",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
