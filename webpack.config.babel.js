@@ -27,9 +27,15 @@ export default {
         test: /\.jsx?$/,
         loaders: ['react-hot', 'babel-loader'],
         include: path.join(__dirname, 'src/client'),
-        exclude: /node_modules/
       }
     ]
+  },
+  devServer: {
+    proxy: {
+      '/api/*': {
+        target: 'http://0.0.0.0:3000'
+      }
+    }
   },
   plugins: [HTMLWebpackPluginConfig, new webpack.HotModuleReplacementPlugin()]
 };
