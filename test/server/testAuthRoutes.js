@@ -12,22 +12,6 @@ before((done) => {
 });
 
 describe('Auth routes', () => {
-  describe('POST /login', () => {
-    const uri = '/api/login';
-    it('Should 400 on missing username and password', (done) => {
-      supertest(app)
-        .post(uri)
-        .expect(400, done);
-    });
-  });
-  describe('POST /logout', () => {
-    const uri = '/api/logout';
-    it('Should 400 on missing username and password', (done) => {
-      supertest(app)
-        .post(uri)
-        .expect(400, done);
-    });
-  });
   describe('POST /register', () => {
     const uri = '/api/register';
     it('Should 400 on missing username and password', (done) => {
