@@ -35,7 +35,9 @@ describe('Auth routes', () => {
       supertest(app)
         .post(uri)
         .send({ username: 'asdf', password: 'asdf' })
-        .expect(201, done);
+        .expect(201, {
+          user: { username: 'asdf', recipes: [], shoppingList: [] },
+        }, done);
     });
     it('Should 403 after trying to create user with existing username', (done) => {
       supertest(app)

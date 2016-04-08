@@ -1,4 +1,5 @@
 import User from '../models/user';
+import _ from 'lodash';
 
 class AuthController {
 
@@ -21,8 +22,13 @@ class AuthController {
         if (docs.length) {
           return res.status(403).send({ error: 'User with that username already exists' });
         }
-        return User.create({ username, password })
-          .then((user) => res.status(201).send({ user }));
+        return User.register({ username }, password, (error, user) => {
+          if (error) {
+            throw error;
+          }
+          const values = ['username', 'recipes', 'shoppingList'];
+          return res.status(201).send({ user: _.pick(user, values) });
+        });
       })
       .catch((error) => {
         console.log(error);
