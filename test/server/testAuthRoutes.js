@@ -6,82 +6,106 @@ import app from '../../src/server';
 import config from '../../src/server/config';
 import User from '../../src/server/models/user.js';
 
-before((done) => {
+const registerUri = '/api/register';
+const loginUri = '/api/login';
+const logoutUri = '/api/logout';
+const testUser = {
+  username: 'valid',
+  password: 'valid',
+};
+
+beforeEach((done) => {
   mockgoose(mongoose).then(() => {
     mongoose.connect(config.testMongodbUrl, (error) => done(error));
   });
 });
 
+afterEach((done) => {
+  mongoose.connection.close();
+  done();
+});
+
 describe('Auth routes', () => {
-  describe('POST /register', () => {
-    after((done) => {
-      User.remove({}, done);
-    });
-    const uri = '/api/register';
+  describe('POST /api/register', () => {
     it('Should 400 on missing username and password', (done) => {
       supertest(app)
-        .post(uri)
+        .post(registerUri)
         .expect(400, done);
     });
     it('Should 400 on missing username', (done) => {
       supertest(app)
-        .post(uri)
+        .post(registerUri)
         .send({ password: 'somepassword' })
         .expect(400, done);
     });
     it('Should 400 on missing password', (done) => {
       supertest(app)
-        .post(uri)
+        .post(registerUri)
         .send({ username: 'someusername' })
         .expect(400, done);
     });
-    it('Should 201 with valid username and password', (done) => {
+    it('Should 201 with valid credentials and 403 after trying existing user', (done) => {
       supertest(app)
-        .post(uri)
-        .send({ username: 'someusername', password: 'somepassword' })
-        .expect(201, {
-          user: { username: 'someusername', recipes: [], shoppingList: [] },
-        }, done);
-    });
-    it('Should 403 after trying to create user with existing username', (done) => {
-      supertest(app)
-        .post(uri)
-        .send({ username: 'someusername', password: 'somepassword' })
-        .expect(403, done);
+        .post(registerUri)
+        .send(testUser)
+        .expect(201, { user: { username: testUser.username, recipes: [], shoppingList: [] } })
+        .end(() => {
+          supertest(app)
+            .post(registerUri)
+            .send(testUser)
+            .expect(403, done);
+        });
     });
   });
 
-  describe('POST /login', () => {
-    before((done) => {
-      const hashedPassword = User.hashPassword('somepassword');
-      User.create({ username: 'someusername', password: hashedPassword }, done);
+  describe('POST /api/login', () => {
+    beforeEach((done) => {
+      User.create({ username: 'valid', password: User.hashPassword('valid') }, done);
     });
-    after((done) => {
-      User.remove({}, done);
-    });
-    const uri = '/api/login';
     it('Should 400 on missing username and password', (done) => {
       supertest(app)
-        .post(uri)
+        .post(loginUri)
         .expect(400, done);
     });
     it('Should 400 on missing username', (done) => {
       supertest(app)
-        .post(uri)
-        .send({ password: 'somepassword' })
+        .post(loginUri)
+        .send({ password: testUser.password })
         .expect(400, done);
     });
     it('Should 400 on missing password', (done) => {
       supertest(app)
-        .post(uri)
-        .send({ username: 'someusername' })
+        .post(loginUri)
+        .send({ username: testUser.username })
         .expect(400, done);
     });
     it('Should 200 with valid usernamd and password', (done) => {
       supertest(app)
-        .post(uri)
-        .send({ username: 'someusername', password: 'somepassword' })
+        .post(loginUri)
+        .send(testUser)
         .expect(200, done);
+    });
+  });
+
+  describe('POST /api/logout', () => {
+    beforeEach((done) => {
+      User.create({ username: 'valid', password: User.hashPassword('valid') }, done);
+    });
+    const agent = supertest.agent(app);
+    it('Should 200 and respond with false even when not logged in', (done) => {
+      agent
+        .post(logoutUri)
+        .expect(200, { success: false }, done);
+    });
+    it('Should 200 and respond with true when logged in', (done) => {
+      agent
+        .post(loginUri)
+        .send(testUser)
+        .end(() => {
+          agent
+            .post(logoutUri)
+            .expect(200, { success: true }, done);
+        });
     });
   });
 });

@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import User from '../models/user';
 
 class AuthController {
@@ -16,22 +14,21 @@ class AuthController {
           return res.status(403).send({ error: 'User with that username already exists' });
         }
         return User.create({ username, password: User.hashPassword(password) })
-          .then((user) => res.status(201).send({ user: this.reduceUser(user) }));
+          .then((user) => res.status(201).send({ user: User.reduceUser(user) }));
       })
       .catch((error) => res.status(500).send({ error }));
   }
 
   login(req, res) {
-    return res.send({ user: this.reduceUser(req.user) });
+    return res.send({ user: User.reduceUser(req.user) });
   }
 
   logout(req, res) {
-    res.sendStatus(501);
-  }
-
-  reduceUser(user) {
-    const values = ['username', 'recipes', 'shoppingList'];
-    return _.pick(user, values);
+    if (!req.user) {
+      return res.send({ success: false });
+    }
+    req.logout();
+    return res.send({ success: true });
   }
 
   verifyLoginParams(req, res, next) {

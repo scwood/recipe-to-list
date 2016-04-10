@@ -10,7 +10,7 @@
     "build": "webpack -p && babel src/server -d dist",
     "coverage": "istanbul cover _mocha -- --recursive --compilers js:babel-register",
     "lint": "eslint src test --ext .js,.jsx",
-    "production": "node dist/index.js",
+    "production": "npm run build && node dist/index.js",
     "start": "npm run start-client & npm run start-server",
     "start-client": "webpack-dev-server --progress",
     "start-server": "nodemon src/server/index.js --exec babel-node --ignore src/client",

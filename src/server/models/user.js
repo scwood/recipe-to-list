@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import mongoose from 'mongoose';
 import { hashSync } from 'bcrypt';
 
@@ -11,6 +12,11 @@ const userSchema = new mongoose.Schema({
 userSchema.statics.hashPassword = (password) => {
   const saltRounds = 10;
   return hashSync(password, saltRounds);
+};
+
+userSchema.statics.reduceUser = (user) => {
+  const values = ['username', 'recipes', 'shoppingList'];
+  return _.pick(user, values);
 };
 
 export default mongoose.model('User', userSchema);
