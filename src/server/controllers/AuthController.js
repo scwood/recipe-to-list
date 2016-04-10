@@ -1,15 +1,8 @@
-import User from '../models/user';
 import _ from 'lodash';
 
+import User from '../models/user';
+
 class AuthController {
-
-  login(req, res) {
-    res.sendStatus(400);
-  }
-
-  logut(req, res) {
-    res.sendStatus(400);
-  }
 
   register(req, res) {
     const username = req.body.username;
@@ -22,18 +15,30 @@ class AuthController {
         if (docs.length) {
           return res.status(403).send({ error: 'User with that username already exists' });
         }
-        return User.register({ username }, password, (error, user) => {
-          if (error) {
-            throw error;
-          }
-          const values = ['username', 'recipes', 'shoppingList'];
-          return res.status(201).send({ user: _.pick(user, values) });
-        });
+        return User.create({ username, password: User.hashPassword(password) })
+          .then((user) => res.status(201).send({ user: this.reduceUser(user) }));
       })
-      .catch((error) => {
-        console.log(error);
-        return res.status(500).send({ error });
-      });
+      .catch((error) => res.status(500).send({ error }));
+  }
+
+  login(req, res) {
+    return res.send({ user: this.reduceUser(req.user) });
+  }
+
+  logout(req, res) {
+    res.sendStatus(501);
+  }
+
+  reduceUser(user) {
+    const values = ['username', 'recipes', 'shoppingList'];
+    return _.pick(user, values);
+  }
+
+  verifyLoginParams(req, res, next) {
+    if (!req.body.username || !req.body.password) {
+      return res.status(400).send({ error: 'Missing username or password' });
+    }
+    return next();
   }
 }
 

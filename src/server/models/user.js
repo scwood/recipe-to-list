@@ -1,12 +1,16 @@
 import mongoose from 'mongoose';
-import passportLocalMongoose from 'passport-local-mongoose';
+import { hashSync } from 'bcrypt';
 
-const User = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   username: String,
+  password: String,
   recipes: [String],
   shoppingList: [Object],
 });
 
-User.plugin(passportLocalMongoose); // handles passwords and hashing
+userSchema.statics.hashPassword = (password) => {
+  const saltRounds = 10;
+  return hashSync(password, saltRounds);
+};
 
-export default mongoose.model('User', User);
+export default mongoose.model('User', userSchema);
