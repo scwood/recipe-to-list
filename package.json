@@ -11,7 +11,7 @@
     "lint": "eslint src test --ext .js,.jsx",
     "production": "npm run build && forever dist/index.js",
     "start": "npm run start:client & npm run start:server",
-    "start:client": "webpack-dev-server --progress --no-info --history-api-fallback",
+    "start:client": "webpack-dev-server --progress --history-api-fallback",
     "start:server": "nodemon src/server/index.js --exec babel-node --ignore src/client",
     "test": "mocha --recursive --compilers js:babel-register || true",
     "test:coverage": "istanbul cover _mocha -- --recursive --compilers js:babel-register",
@@ -30,11 +30,7 @@
     "mongoose": "^4.4.11",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
-    "react-redux": "^4.4.5",
-    "react-router": "^2.0.1",
-    "react-router-redux": "^4.0.2",
-    "redux": "^3.4.0",
-    "redux-thunk": "^2.0.1"
+    "react-router": "^2.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.6.5",

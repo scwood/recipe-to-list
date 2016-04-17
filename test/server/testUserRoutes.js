@@ -17,7 +17,7 @@ const userUri = '/api/user';
 const signUpEmailUri = '/api/user/signUpEmail';
 const tokenUri = '/api/user/token';
 
-before((done) => {
+before(done => {
   mockgoose(mongoose).then(() => {
     mongoose.connect(config.testMongodbUrl, (error) => done(error));
   });
