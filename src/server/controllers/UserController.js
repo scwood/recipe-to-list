@@ -11,7 +11,13 @@ class UserController {
   }
 
   postUser(req, res) {
-    return res.sendStatus(501);
+    const testUser = {
+      email: 'spencercwood@gmail.com',
+      name: 'Spencer',
+      password: 'password',
+    };
+    User.create(testUser);
+    return res.sendStatus(200);
   }
 
   createToken(req, res) {
@@ -24,7 +30,9 @@ class UserController {
         const token = jwt.sign({ email }, config.secret);
         return res.send({ token });
       })
-      .catch((error) => res.status(500).send({ error }));
+      .catch((error) => {
+        res.status(500).send({ error });
+      });
   }
 
   sendSignUpEmail(req, res) {
