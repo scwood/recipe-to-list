@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Register() {
+function RegisterForm({ error, onEmailChange, onNameChange, onPasswordChange }) {
   return (
     <form>
       <fieldset className="form-group">
@@ -28,4 +28,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default RegisterForm;

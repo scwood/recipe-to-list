@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import fetch from 'isomorphic-fetch';
 import { browserHistory } from 'react-router';
 
-import LoginForm from '../components/LoginForm';
+import RegisterForm from '../components/RegisterForm';
 
-class Login extends Component {
+class Register extends Component {
   constructor() {
     super();
     this.state = {
@@ -12,7 +12,7 @@ class Login extends Component {
       password: '',
       error: null,
     };
-    this.onLoginClick = this.onLoginClick.bind(this);
+    this.onRegisterClick = this.onRegisterClick.bind(this);
     this.onEmailUpdate = this.onEmailUpdate.bind(this);
     this.onPasswordUpdate = this.onPasswordUpdate.bind(this);
   }
@@ -25,7 +25,7 @@ class Login extends Component {
     this.setState({ password: event.target.value });
   }
 
-  onLoginClick(event) {
+  onRegisterClick(event) {
     event.preventDefault();
     const { email, password } = this.state;
     if (email === '' || password === '') {
@@ -50,14 +50,14 @@ class Login extends Component {
 
   render() {
     return (
-      <LoginForm
+      <RegisterForm
         error={this.state.error}
         onEmailUpdate={this.onEmailUpdate}
         onPasswordUpdate={this.onPasswordUpdate}
-        onLoginClick={this.onLoginClick}
+        onRegisterClick={this.onRegisterClick}
       />
     );
   }
 }
 
-export default Login;
+export default Register;

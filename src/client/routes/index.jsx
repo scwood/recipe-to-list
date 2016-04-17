@@ -6,7 +6,7 @@ import ConfirmRecipe from '../components/ConfirmRecipe';
 import EmailConfirmed from '../components/EmailConfirmed';
 import EmailSent from '../components/EmailSent';
 import Login from '../containers/Login';
-import Register from '../components/Register';
+import Register from '../containers/Register';
 import Root from '../components/Root';
 import ShoppingList from '../components/ShoppingList';
 import UrlForm from '../components/UrlForm';
