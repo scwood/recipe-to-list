@@ -5,8 +5,8 @@ function Header(props) {
   return (
     <div className="header clearfix">
       <nav className="navbar navbar-light">
-        <a className="navbar-brand" href="/">
-          Recipe To List
+        <a className="navbar-brand" href="/" style={{ fontWeight: '500' }}>
+          Recipe To List <i className="fa fa-shopping-cart"></i>
         </a>
         <div className="nav navbar-nav pull-sm-right pull-xs-left">
           <span className="nav-item nav-link active">Welcome, {username}</span>

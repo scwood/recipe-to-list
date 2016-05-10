@@ -13,9 +13,9 @@
     "start": "npm run start:client & npm run start:server",
     "start:client": "webpack-dev-server --progress --history-api-fallback",
     "start:server": "nodemon src/server/index.js --exec babel-node --ignore src/client",
-    "test": "mocha --recursive --compilers js:babel-register || true",
+    "test": "mocha --recursive --compilers js:babel-register -R dot -t 4000",
     "test:coverage": "istanbul cover _mocha -- --recursive --compilers js:babel-register",
-    "test:watch": "nodemon -q --exec npm test"
+    "test:watch": "npm test -- --watch"
   },
   "author": "Spencer Wood",
   "license": "ISC",

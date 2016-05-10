@@ -11,13 +11,16 @@ class UserController {
   }
 
   postUser(req, res) {
-    const testUser = {
-      email: 'spencercwood@gmail.com',
-      name: 'Spencer',
-      password: 'password',
-    };
-    User.create(testUser);
-    return res.sendStatus(200);
+    const { token } = req.body;
+    jwt.verify(token, config.secret, (error, user) => {
+      if (error) {
+        return res.status(400).send({ error: 'Invalid token' });
+      }
+      return User.create(user)
+        .then(() => {
+          res.send({ success: true });
+        });
+    });
   }
 
   createToken(req, res) {
@@ -40,10 +43,15 @@ class UserController {
     User.find({ email })
       .then((docs) => {
         if (docs.length) {
-          return res.status(403).send({ error: 'A user with that email address already exists' });
+          return res.status(403).send({
+            error: 'A user with that email address already exists',
+          });
+        }
+        if (!this._isValidEmail(email)) {
+          return res.status(400).send({ error: 'Invalid email' });
         }
         const token = jwt.sign({ email, name, password }, config.secret);
-        const link = `${req.protocol}://${req.get('host')}/emailConfirmed/${token}`;
+        const link = `${req.protocol}://${req.get('host')}/emailConfirmed?token=${token}`;
         const from = `RecipeToList <${config.email.username}>`;
         const to = email;
         const subject = 'RecipeToList email confirmation';
@@ -61,7 +69,9 @@ class UserController {
           return res.send({ success: true });
         });
       })
-      .catch((error) => res.status(500).send({ error }));
+      .catch((error) => {
+        res.status(500).send({ error });
+      });
   }
 
   postRecipe(req, res) {
@@ -78,20 +88,20 @@ class UserController {
 
   verifyLoginParams(req, res, next) {
     const required = ['email', 'password'];
-    return this.reportMissingParams(req, res, next, required);
+    return this._reportMissingParams(req, res, next, required);
   }
 
   verifyRegisterParams(req, res, next) {
     const required = ['email', 'name', 'password'];
-    return this.reportMissingParams(req, res, next, required);
+    return this._reportMissingParams(req, res, next, required);
   }
 
   verifyPostUserParams(req, res, next) {
     const required = ['token'];
-    return this.reportMissingParams(req, res, next, required);
+    return this._reportMissingParams(req, res, next, required);
   }
 
-  reportMissingParams(req, res, next, required) {
+  _reportMissingParams(req, res, next, required) {
     const missing = [];
     required.forEach((param) => {
       if (!req.body[param]) {
@@ -102,10 +112,15 @@ class UserController {
       return next();
     }
     if (missing.length === 1) {
-      return res.status(400).send({ error: `Missing required parameter: ${missing[0]}` });
+      return res.status(400).send({ error: `Missing required value: ${missing[0]}` });
     }
     const missingString = missing.join(', ');
-    return res.status(400).send({ error: `Missing required parameters: ${missingString}` });
+    return res.status(400).send({ error: `Missing required values: ${missingString}` });
+  }
+
+  _isValidEmail(email) {
+    const validEmail = /^.+@.+\..+/;
+    return validEmail.test(email);
   }
 }
 

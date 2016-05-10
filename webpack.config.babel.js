@@ -15,7 +15,7 @@ export default {
     'webpack/hot/only-dev-server',
   ],
   output: {
-    path: path.join(__dirname, 'dist/static'),
+    path: path.join(__dirname, 'dist/public'),
     filename: '/bundle.js',
   },
   resolve: {

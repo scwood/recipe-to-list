@@ -19,7 +19,7 @@ router.post(
 router.post(
   '/signUpEmail',
   controller.verifyRegisterParams.bind(controller),
-  controller.sendSignUpEmail);
+  controller.sendSignUpEmail.bind(controller));
 
 router.route('/recipes')
   .post(controller.postRecipe)

@@ -1,16 +1,19 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
-function LoginForm({ error, onLoginClick, onEmailUpdate, onPasswordUpdate }) {
+function LoginForm(props) {
   return (
     <form>
-      {error ? <div className="alert alert-danger">{error}</div> : null }
+      {props.error
+        ? <div className="alert alert-danger">{props.error}</div>
+        : null
+      }
       <fieldset className="form-group">
         <label>Email</label>
         <input
           className="form-control"
-          placeholder="Enter email"
-          onChange={onEmailUpdate}
+          placeholder="Enter your email"
+          onChange={props.onEmailChange}
         />
       </fieldset>
       <fieldset className="form-group">
@@ -18,12 +21,12 @@ function LoginForm({ error, onLoginClick, onEmailUpdate, onPasswordUpdate }) {
         <input
           type="password"
           className="form-control"
-          placeholder="Enter Password"
-          onChange={onPasswordUpdate}
+          placeholder="Enter your password"
+          onChange={props.onPasswordChange}
         />
       </fieldset>
       <p><Link to="/">Forgot your password?</Link></p>
-      <button className="btn btn-success btn-block" onClick={onLoginClick}>
+      <button className="btn btn-success btn-block" onClick={props.onLoginClick}>
         Sign in
       </button>
       <hr />
@@ -35,8 +38,8 @@ function LoginForm({ error, onLoginClick, onEmailUpdate, onPasswordUpdate }) {
 LoginForm.propTypes = {
   error: PropTypes.string,
   onLoginClick: PropTypes.func.isRequired,
-  onEmailUpdate: PropTypes.func.isRequired,
-  onPasswordUpdate: PropTypes.func.isRequired,
+  onEmailChange: PropTypes.func.isRequired,
+  onPasswordChange: PropTypes.func.isRequired,
 };
 
 export default LoginForm;

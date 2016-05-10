@@ -7,7 +7,7 @@ function Root(props) {
   const username = 'scwood';
   return (
     <div className="container m-t-2" style={{ maxWidth: 800 }}>
-      <Header username={username} onSignOutClick={() => console.log('Signing out')} />
+      <Header username={username} onSignOutClick={() => 1 } />
       <hr />
       <div className="row">
         <div className="col-md-6" style={{ borderRight: '1px solid rgba(0,0,0,.1)' }}>
